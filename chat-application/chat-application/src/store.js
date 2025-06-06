@@ -7,7 +7,7 @@ export const useChatStore = create((set) => ({
       id: 1,
       name: 'John',
       messages: [
-        { id: 101, user: 'John', timestamp: '10:00 AM', content: 'Hello there!' },
+        { id: 101, user: 'John', timestamp: '10:00 AM', content: 'Hello there!',reply:'Hey How are you'},
         { id: 102, user: 'You', timestamp: '10:01 AM', content: 'Hi John!' },
       ],
     },
@@ -56,10 +56,33 @@ export const useChatStore = create((set) => ({
                   user: 'You',
                   timestamp: new Date().toLocaleTimeString(),
                   content: messageText,
+                  reply:null
                 },
               ],
             }
           : chat
       ),
     })),
+
+    replyMessage:(chatId, messageText,repliedMessageText) =>
+      set((state) => ({
+        chats: state.chats.map((chat) =>
+          chat.id === chatId
+            ? {
+                ...chat,
+                messages: [
+                  ...chat.messages,
+                  {
+                    id: Date.now(),
+                    user: 'You',
+                    timestamp: new Date().toLocaleTimeString(),
+                    reply:repliedMessageText,
+                    content: messageText,
+                    
+                  },
+                ],
+              }
+            : chat
+        ),
+      })),
 }));
